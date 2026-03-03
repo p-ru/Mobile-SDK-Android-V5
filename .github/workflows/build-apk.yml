@@ -3,7 +3,7 @@ name: Generate Android APK
 # Trigger the workflow when code is pushed to the 'new' branch
 on:
   push:
-    branches:[ "new" ]
+    branches: [ "new" ]
   pull_request:
     branches: [ "new" ]
 
