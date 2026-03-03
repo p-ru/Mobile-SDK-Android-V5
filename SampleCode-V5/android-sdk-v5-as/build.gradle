@@ -12,7 +12,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:8.5.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_VERSION"
     }
 }
@@ -20,16 +20,19 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {
-            url REPO_MAVEN2
-        }
+        mavenLocal()
+        maven { url REPO_MAVEN2 }
         google()
         jcenter()
         mavenCentral()
-        maven {
-            url KOTLIN_MAVEN
-        }
+        maven { url KOTLIN_MAVEN }
         maven { url JITPACK_MAVEN_URL }
+
+        maven {url "https://raw.githubusercontent.com/rosjava/rosjava_mvn_repo/master"}
+        maven {url 'https://raw.githubusercontent.com/p-ru/rosjava_mvn_repo/noetic' }
+        maven {url "https://maven.repository.redhat.com/ga"}
+        maven {url "https://artifacts.camunda.com/artifactory/public"}
+
         repositories {
             flatDir {
                 dirs new File(rootProject.projectDir.getAbsolutePath() + '/libs')

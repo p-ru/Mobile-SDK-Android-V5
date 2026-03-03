@@ -91,6 +91,7 @@ class LiveFragment : DJIFragment() {
         initLiveButton()
         initCameraStream()
         initLiveData()
+
     }
 
     override fun onDestroyView() {

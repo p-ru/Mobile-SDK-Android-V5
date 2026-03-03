@@ -11,6 +11,13 @@
         android:label="key_value_page"
         tools:layout="@layout/frag_key_value_page"/>
 
+    <!--added feb 4 -->
+    <fragment
+        android:id="@+id/key_camera_stream_detail_page"
+        android:name="dji.sampleV5.aircraft.pages.CameraStreamDetailFragment"
+        android:label="camera_stream_detail_page"
+        tools:layout="@layout/fragment_camera_stream_detail" />
+
     <fragment
         android:id="@+id/key_multi_camera_stream_page"
         android:name="dji.sampleV5.aircraft.pages.CameraStreamListFragment"

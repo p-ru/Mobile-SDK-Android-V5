@@ -16,6 +16,10 @@ open class DJIApplication : Application() {
 
     private val msdkManagerVM: MSDKManagerVM by globalViewModels()
 
+    companion object {
+        var isCameraStreamRunning = false
+    }
+
     override fun onCreate() {
         super.onCreate()
 

@@ -14,6 +14,7 @@ object QuickTestConfig {
     private const val KEY_RC_LTE_PRIVATIZATION_SERVER_INFO = "key_rc_lte_privatization_server_info"
 
     val simulatorAreaList = listOf(
+        SimulatorArea("澳洲", LocationCoordinate2D(-37.71797, 145.04706), AreaCode.AUSTRALIA),
         SimulatorArea("中国", LocationCoordinate2D(22.5797650, 113.9411710), AreaCode.CHINA),
         SimulatorArea("美国", LocationCoordinate2D(34.063191, -118.121621), AreaCode.UNITED_STATES_OF_AMERICA),
         SimulatorArea("日本", LocationCoordinate2D(35.658890, 139.746074), AreaCode.JAPAN),

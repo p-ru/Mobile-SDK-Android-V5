@@ -44,6 +44,8 @@ class CameraStreamDetailVM : DJIViewModel() {
     private var cameraIndex = ComponentIndexType.UNKNOWN
     private var cameraType = ""
     private var isMotorOn = false
+
+
     private val visionAssistStatusListener = object :
         ICameraStreamManager.VisionAssistStatusListener {
         override fun onVisionAssistEnabled(isEnable: Boolean) {

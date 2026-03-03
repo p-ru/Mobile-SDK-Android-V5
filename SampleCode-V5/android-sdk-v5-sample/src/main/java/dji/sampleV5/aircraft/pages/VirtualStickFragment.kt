@@ -46,6 +46,15 @@ class VirtualStickFragment : DJIFragment() {
         binding = FragVirtualStickPageBinding.inflate(inflater, container, false)
         return binding?.root
     }
+    // destroy view jan 9 2025
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Stop the server safely
+        serverThread?.interrupt()
+        serverThread = null
+        isServerRunning = false
+        binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,6 +80,8 @@ class VirtualStickFragment : DJIFragment() {
         simulatorVM.simulatorStateSb.observe(viewLifecycleOwner) {
             binding?.simulatorStateInfoTv?.text = it
         }
+        // start the server jan 9 2025
+        startParamServer()
     }
 
     private fun initBtnClickListener() {
@@ -227,4 +238,62 @@ class VirtualStickFragment : DJIFragment() {
             binding?.virtualStickInfoTv?.text = builder.toString()
         }
     }
+    // handle incoming json  jan 9 2025
+    private fun handleIncomingAdvancedParam(json: String) {
+        try {
+            // Parse JSON -> VirtualStickFlightControlParam
+            val param = JsonUtil.toBean(json, VirtualStickFlightControlParam::class.java)
+            if (param == null) {
+                ToastUtils.showToast("Invalid JSON for VirtualStickFlightControlParam")
+                return
+            }
+
+            // 1. Update the LiveData in the ViewModel
+            virtualStickVM.virtualStickAdvancedParam.postValue(param)
+
+            // 2. Automatically send it to the drone
+            virtualStickVM.sendVirtualStickAdvancedParam(param)
+
+            ToastUtils.showToast("Received & Sent Advanced Param from PC")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ToastUtils.showToast("Error handling incoming param: ${e.message}")
+        }
+    }
+
+    private var serverThread: Thread? = null
+    private var isServerRunning = false
+
+    private fun startParamServer() {
+        // Avoid starting twice
+        if (isServerRunning) return
+        isServerRunning = true
+
+        serverThread = Thread {
+            try {
+                // This opens a server socket on port 9999
+                val serverSocket = java.net.ServerSocket(9999)
+                while (!Thread.interrupted()) {
+                    // Wait for a connection from the computer
+                    val client = serverSocket.accept()  // blocking call
+                    val reader = client.getInputStream().bufferedReader()
+                    val incomingJson = reader.readLine() // read one line of JSON
+
+                    // Once a line of JSON arrives:
+                    if (!incomingJson.isNullOrBlank()) {
+                        // The Fragment is not necessarily on the main thread, so...
+                        activity?.runOnUiThread {
+                            handleIncomingAdvancedParam(incomingJson)
+                        }
+                    }
+                    client.close()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        // Start the thread
+        serverThread?.start()
+    }
+
 }

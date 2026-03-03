@@ -21,6 +21,8 @@ import dji.sdk.keyvalue.value.camera.CameraVideoStreamSourceType
 import dji.sdk.keyvalue.value.common.ComponentIndexType
 import dji.sdk.keyvalue.value.flightassistant.VisionAssistDirection
 import dji.v5.manager.interfaces.ICameraStreamManager
+import dji.sampleV5.aircraft.DJIApplication
+
 
 class CameraStreamDetailFragment : DJIFragment() {
 
@@ -47,6 +49,7 @@ class CameraStreamDetailFragment : DJIFragment() {
 
     private val viewModel: CameraStreamDetailVM by viewModels()
 
+
     private lateinit var rgScaleLayout: RadioGroup
     private lateinit var mrgLensTypeLayout: RadioGroup
     private lateinit var mAssistViewDirectionLayout: RadioGroup
@@ -68,11 +71,26 @@ class CameraStreamDetailFragment : DJIFragment() {
     private var scaleType = ICameraStreamManager.ScaleType.CENTER_INSIDE
     private var assistantVideoMode = VisionAssistDirection.AUTO
 
+    // modified to set a flag to true for ro, and set to false when destroyed
+    override fun onStart() {
+        super.onStart()
+        DJIApplication.isCameraStreamRunning = true
+    }
+
+    override fun onStop() {
+        super.onStop()
+        DJIApplication.isCameraStreamRunning = false
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cameraIndex = ComponentIndexType.find(arguments?.getInt(KEY_CAMERA_INDEX, 0) ?: 0)
         onlyOneCamera = arguments?.getBoolean(KEY_ONLY_ONE_CAMERA, false) ?: false
     }
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val layoutId: Int = if (onlyOneCamera) {
@@ -153,8 +171,8 @@ class CameraStreamDetailFragment : DJIFragment() {
             mAssistViewDirectionLayout.visibility = View.VISIBLE
             btnCloseOrOpenVisionAssist.visibility = View.VISIBLE
         } else {
-            mAssistViewDirectionLayout.visibility = View.GONE
-            btnCloseOrOpenVisionAssist.visibility = View.GONE
+            mAssistViewDirectionLayout.visibility = View.VISIBLE
+            btnCloseOrOpenVisionAssist.visibility = View.VISIBLE
         }
     }
 
