@@ -14,19 +14,17 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Set up JDK 17 
+    - name: Set up JDK 21 
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'   # Updated from 17 to 21
         distribution: 'temurin'
         cache: gradle
 
     - name: Grant execute permission for gradlew
-      # We point directly to the file in the subfolder
       run: chmod +x SampleCode-V5/android-sdk-v5-as/gradlew
 
     - name: Build Debug APK
-      # We run the command inside the specific directory
       run: ./gradlew assembleDebug
       working-directory: SampleCode-V5/android-sdk-v5-as
 
@@ -34,5 +32,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: debug-apk
-        # This will search all folders for the resulting .apk
         path: "**/build/outputs/apk/debug/*.apk"
